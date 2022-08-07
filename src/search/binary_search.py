@@ -1,0 +1,2 @@
+def bs:
+    print('hi')
