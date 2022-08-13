@@ -1,2 +1,0 @@
-def bs:
-    print('hi')

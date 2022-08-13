@@ -1,0 +1,30 @@
+def reverseColumnArray(arr):
+ 
+    # Print the arr[][] before
+    # reversing every column
+    printMatrix(arr)
+    print()
+ 
+    # Traverse each column of arr[][]
+    for i in range(0, N):
+        # Initialise start and end index
+        start = 0
+        end = M - 1
+ 
+        # Till start < end, swap the
+        # element at start and end index
+        while (start < end):
+            # Swap the element
+            temp = arr[start][i]
+            arr[start][i] = arr[end][i]
+            arr[end][i] = temp
+ 
+            # Increment start and decrement
+            # end for next pair of swapping
+            start += 1
+            end -= 1
+ 
+        # Print the arr[][] after
+        # reversing every column
+    printMatrix(arr)
+ 
