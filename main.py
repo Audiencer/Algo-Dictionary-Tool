@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
 import sys
+import argparse
 import yaml
 from os import listdir
 algo = listdir('./src/')
+
+# Parser testment
+# parser = argparse.ArgumentParser()
+# parser.add_argument('Q', help='To quit the tool', type=int)
+# parser.add_argument('L', help='To quit the tool', type=int)
+# args = parser.parse_args()
+# if args.Q:
+# elif args.L:
 
 if __name__ == '__main__':
      while True:
@@ -29,19 +38,17 @@ if __name__ == '__main__':
             else:
                 exit()
         elif ans == '-I' or ans == 'I':
-            file = input('Please input the config file path. Example: `/desktop/example.yaml` ')
-            #Working in progress
+            print("""You can import a YAML file with following configuration:
+    Algo: 
+    - algorithm: Sort
+      type: Merge_Sort""")
+            file = input('Please import the config file path. Example: `~/desktop/example.yaml` ')
+            print(file)
+            with open(file, 'r') as f:
+                data = yaml.load(f, Loader=yaml.Loader)
+                with open(f'./src/{data["algo"][0]["algorithm"]}/{data["algo"][0]["type"]}.txt', 'r') as f:
+                    print(f.read())
         else:
             print('Invalid option')
             exit()
-
-    # with open('config.yaml', 'r') as f:
-    #     data = yaml.load(f, Loader=yaml.Loader)
-    # print(data['algo'])
-    
-    # num = 1
-    # path = f'./src/{sys.argv[1]}/{sys.argv[2]}/{sys.argv[3]}/{sys.argv[2]}.txt'
-    # with open(path, 'r') as f:
-    #     ans = f.read()
-    #     print(ans)
 
