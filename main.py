@@ -2,53 +2,54 @@
 import sys
 import argparse
 import yaml
+import os
 from os import listdir
-algo = listdir('./src/')
 
-# Parser testment
-# parser = argparse.ArgumentParser()
-# parser.add_argument('Q', help='To quit the tool', type=int)
-# parser.add_argument('L', help='To quit the tool', type=int)
-# args = parser.parse_args()
-# if args.Q:
-# elif args.L:
+'''
+algos:
+['Tree', 'Sort', 'Merge', 'LinkedList', 'Matrix']
 
-if __name__ == '__main__':
-     while True:
-        print('Available options: \n -L to list all available Algoritms. \n -G to get the Algoritm. \n -I to import a config file \n -Q to quit.')
-        ans = input('Your option: ')
-        if ans == '-Q' or ans == 'Q':
-            exit()
-        elif ans == '-L' or ans == 'L':
-            print('Available Algoritms: ')
-            for i in range(len(algo)): print(i, algo[i])
-        elif ans == '-G' or ans == 'G':
-            print('Available Algorithm')
-            for i, j in enumerate(algo):
-                print(i, j)
-            select_algo = int(input('please enter the Algorithm number: '))
-            if 0 <= select_algo < len(algo):
-                methods = listdir(f'./src/{algo[select_algo]}/')
-                print('Avalable methods')
-                for i, j in enumerate(methods):
-                    print(i, j)
-                file_name = int(input('please enter the method number: '))
-                with open(f'./src/{algo[select_algo]}/{methods[file_name]}', 'r') as f:
-                    print(f.read())
-            else:
-                exit()
-        elif ans == '-I' or ans == 'I':
-            print("""You can import a YAML file with following configuration:
-    Algo: 
-    - algorithm: Sort
-      type: Merge_Sort""")
-            file = input('Please import the config file path. Example: `~/desktop/example.yaml` ')
-            print(file)
-            with open(file, 'r') as f:
-                data = yaml.load(f, Loader=yaml.Loader)
-                with open(f'./src/{data["algo"][0]["algorithm"]}/{data["algo"][0]["type"]}.txt', 'r') as f:
-                    print(f.read())
-        else:
-            print('Invalid option')
-            exit()
+algos_choices:
+['tree', 'sort', 'merge', 'linkedlist', 'matrix']
 
+methods:
+['Merge_Sort.txt', 'Quick_Sort.txt', 'Merge_Sort.txt', 'Reverse_Column.txt']
+
+methods_choices:
+['merge-sort', 'quick-sort', 'merge-sort', 'reverse-column']
+'''
+algos = listdir('./src/')
+methods = []
+methods_choices = []
+algos_choices = []
+
+algo_method_mapping = {}
+for algo in algos:
+    ls = listdir(f'./src/{algo}/')
+    methods.extend(ls)
+    algo_method_mapping[algo.lower()] = [os.path.splitext(method)[0].replace('_', '-').lower() for method in ls]
+    algos_choices.append(algo.lower())
+    methods_choices.extend(algo_method_mapping[algo.lower()])
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-A', '--algo', help='specify an algo', choices=algos_choices)
+parser.add_argument('-M', '--method', help='specify a method', choices=methods_choices)
+
+# python3 algo-tool.py -A sort -M qsort
+# python3 algo-tool.py --algo sort --method qsort
+args = parser.parse_args()
+algo_mapping = dict(zip(algos_choices, algos))
+method_mapping = dict(zip(methods_choices, methods))
+
+
+
+if args.method not in algo_method_mapping[args.algo]:
+    print(f'available methods for {args.algo} are {algo_method_mapping[args.algo]}')
+    exit()
+
+
+method_filename = method_mapping[args.method]
+algo_dirname = algo_mapping[args.algo]
+with open(f'./src/{algo_dirname}/{method_filename}') as f:
+    data = f.read()
+    print(data)
